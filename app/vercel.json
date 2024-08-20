@@ -7,7 +7,6 @@
       { "src": "/(.*)", "dest": "main.py" }
     ],
     "env": {
-      "APP_MODULE": "main:app",
-      "PORT": 8000
+      "APP_MODULE": "main:app"
     }
   }
