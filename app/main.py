@@ -15,6 +15,7 @@ import sys
 import json
 from fastapi import FastAPI
 import urllib.request
+import uvicorn
 
 app = FastAPI()
 
@@ -123,3 +124,6 @@ async def generateSeq(mp3url : str = ""):
     urllib.request.urlretrieve(mp3url, "/code/app/audio/ad.mp3")
     seq = await pred_seq("/code/app/audio/ad.mp3", 136, 5)
     return {"sequences":seq}
+
+if __name__ == "__main__":
+    uvicorn.run(app, port=8000)
