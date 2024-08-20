@@ -125,5 +125,3 @@ async def generateSeq(mp3url : str = ""):
     seq = await pred_seq("app/audio/ad.mp3", 136, 5)
     return {"sequences":seq}
 
-if __name__ == "__main__":
-    uvicorn.run(app, port=8000)
