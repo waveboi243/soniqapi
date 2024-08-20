@@ -95,7 +95,7 @@ learning_rate_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
 # optimizer with learning rate scheduler
 opt = tf.keras.optimizers.Adam(learning_rate=learning_rate_schedule)
 
-SoniqModel = keras.models.load_model("/code/app/smallmodel", custom_objects={"opt":opt, "custom_loss":custom_loss})
+SoniqModel = keras.models.load_model("app/smallmodel", custom_objects={"opt":opt, "custom_loss":custom_loss})
 SoniqModel.compile()
 
 async def pred_seq(input_mp3, ml, feD):
@@ -121,8 +121,8 @@ def read_root():
 @app.get("/mp3post/")
 async def generateSeq(mp3url : str = ""):
     print(mp3url)
-    urllib.request.urlretrieve(mp3url, "/code/app/audio/ad.mp3")
-    seq = await pred_seq("/code/app/audio/ad.mp3", 136, 5)
+    urllib.request.urlretrieve(mp3url, "app/audio/ad.mp3")
+    seq = await pred_seq("app/audio/ad.mp3", 136, 5)
     return {"sequences":seq}
 
 if __name__ == "__main__":
