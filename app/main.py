@@ -124,4 +124,8 @@ async def generateSeq(mp3url : str = ""):
     urllib.request.urlretrieve(mp3url, "app/audio/ad.mp3")
     seq = await pred_seq("app/audio/ad.mp3", 136, 5)
     return {"sequences":seq}
-
+'''
+"builds": [
+      { "src": "app/main.py", "use": "@vercel/python" }
+    ],
+'''
