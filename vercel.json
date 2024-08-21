@@ -3,6 +3,7 @@
     "builds": [
       { "src": "app/main.py", "use": "@vercel/python" }
     ],
+    "buildCommand": "uvicrn app:main",
     "rewrites": [
       { "source": "/(.*)", "destination": "main.py" }
     ]
