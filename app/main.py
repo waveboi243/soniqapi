@@ -2,9 +2,9 @@
 from basic_pitch.inference import predict
 from basic_pitch import ICASSP_2022_MODEL_PATH
 import os
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow import math
+from keras import *
+from keras.layers import *
+import tflite_runtime.interpreter as tflite
 import ast
 from numpy import *
 import numpy as np
@@ -72,29 +72,20 @@ def process(input, max_length, fd):
     elif length > units: 
         d = d[:units]
     d = [normal_input(x, min=min(d), max=max(d)) for x in d]
-    return tf.reshape(tf.constant(d, dtype="float32"), [1, int(max_length), int(fd)])
+    return keras.layers.Reshape([1, int(max_length), int(fd)])(keras.ops.convert_to_tensor(d, dtype="float32"))
 
 # loss function comparing actual and predicted sequences 
 def custom_loss(y_true, y_pred):
-    y_true = tf.reshape(y_true, [-1])
-    y_pred = tf.reshape(y_pred, [-1])
-    y_pred = tf.slice(y_pred, [0], [len(y_true)])
+    y_true = keras.layers.Reshape([-1])(y_true)
+    y_pred = keras.layers.Reshape([-1])(y_pred)
+    y_pred = keras.ops.slice(y_pred, [0], [len(y_true)])
     mid = (int((len(y_true))/15))
-    y_true = tf.reshape(y_true, [1, mid, 15])
-    y_pred = tf.reshape(y_pred, [1, mid, 15])
-    sq = math.square(y_true-y_pred)
-    return math.reduce_mean(sq)
+    y_true = keras.layers.Reshape([1, mid, 15])(y_true)
+    y_pred = keras.layers.Reshape([1, mid, 15])(y_pred)
+    sq = keras.ops.square(y_true-y_pred)
+    return np.mean(sq)
 
-# learning rate scheduler - credit to Daniel Onugha for tutorial
-learning_rate_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-    initial_learning_rate=0.01, # DO NOT EDIT
-    decay_steps=150,
-    decay_rate=0.96
-)
-
-# optimizer with learning rate scheduler
-opt = tf.keras.optimizers.Adam(learning_rate=learning_rate_schedule)
-interpreter = tf.lite.Interpreter(model_path="app/soniqmodel_small.tflite")
+interpreter = tflite.Interpreter(model_path="app/soniqmodel_small.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
@@ -118,7 +109,7 @@ async def pred_seq(input_mp3, ml, feD):
     interpreter.invoke()
     splines = interpreter.get_tensor(output_details[0]['index'])[0]
     amount = interpreter.get_tensor(output_details[0]['index'])[1]
-    splines = np.array(tf.squeeze(splines)).tolist()
+    splines = np.array(keras.ops.squeeze(splines)).tolist()
     splines = list(map(denormal_output, splines))
     amount = int(amount[0][0] * 200)
     # truncates sequences to predicted number of valid sequences
