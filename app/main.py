@@ -94,7 +94,7 @@ learning_rate_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
 
 # optimizer with learning rate scheduler
 opt = tf.keras.optimizers.Adam(learning_rate=learning_rate_schedule)
-interpreter = tf.lite.Interpreter(model_path="app/soniqmodel_large.tflite")
+interpreter = tf.lite.Interpreter(model_path="app/soniqmodel_small.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
