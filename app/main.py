@@ -94,17 +94,30 @@ learning_rate_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
 
 # optimizer with learning rate scheduler
 opt = tf.keras.optimizers.Adam(learning_rate=learning_rate_schedule)
+interpreter = tf.lite.Interpreter(model_path="app/soniqmodel_large.tflite")
+interpreter.allocate_tensors()
 
+# Get input and output tensors.
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+
+'''
 SoniqModel = keras.models.load_model("app/streamlinedmodel", custom_objects={"opt":opt, "custom_loss":custom_loss})
 SoniqModel.compile()
-
+'''
 async def pred_seq(input_mp3, ml, feD):
     model_output, midi_data, note_events = predict(input_mp3)
     _list = dechain(note_events)
     _list = descalar(_list)
     input_data = _list
     x = process(input_data, ml, feD)
+    interpreter.set_tensor(input_details[0]['index'], x)
+    '''
     splines, amount = SoniqModel.predict(x)
+    '''
+    interpreter.invoke()
+    splines = interpreter.get_tensor(output_details[0]['index'])[0]
+    amount = interpreter.get_tensor(output_details[0]['index'])[1]
     splines = np.array(tf.squeeze(splines)).tolist()
     splines = list(map(denormal_output, splines))
     amount = int(amount[0][0] * 200)
