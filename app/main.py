@@ -18,34 +18,7 @@ from fastapi import FastAPI
 import urllib.request
 import uvicorn
 
-def uninstall_package(package):
-  subprocess.check_call(["pip", "uninstall", "-y", package])
 
-uninstall_package('jaxlib')
-uninstall_package('chex')
-uninstall_package('distrax')
-uninstall_package('dopamine-rl')
-uninstall_package('flax')
-uninstall_package('optax')
-uninstall_package('orbax-checkpoint')
-uninstall_package('trax')
-uninstall_package('gensim')
-uninstall_package('fastai')
-uninstall_package('seaborn')
-uninstall_package('matplotlib')
-uninstall_package('blis')
-uninstall_package('thinc')
-uninstall_package('spacy')
-uninstall_package('en-core-web-sm')
-uninstall_package('language_data')
-uninstall_package('jax')
-uninstall_package('debugpy')
-uninstall_package('scikit-image')
-uninstall_package('torch')
-uninstall_package('torchvision')
-uninstall_package('torchaudio')
-uninstall_package('torchtext')
-uninstall_package('accelerate')
 app = FastAPI()
 
 # this function removes scalar (non-list) values from a given list
