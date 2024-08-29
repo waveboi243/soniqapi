@@ -4,7 +4,7 @@ from basic_pitch import ICASSP_2022_MODEL_PATH
 import os
 from keras import *
 from keras.layers import *
-import tensorflow as tf
+import tflite_runtime.interpreter as tflite
 import ast
 from numpy import *
 import numpy as np
@@ -87,7 +87,7 @@ def custom_loss(y_true, y_pred):
     sq = keras.ops.square(y_true-y_pred)
     return np.mean(sq)
 
-interpreter = tf.lite.Interpreter(model_path="app/soniqmodel_small.tflite")
+interpreter = tflite.Interpreter(model_path="app/soniqmodel_small.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
