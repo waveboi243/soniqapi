@@ -1,0 +1,11 @@
+{
+    "runtime": {
+      "majorVersion": "3.6.0"
+    },
+    "command": "sh ./start.sh",
+    "isClustered": true,
+    "release": {
+      "version": "1.0"
+    },
+    "notes": "Soniq API"
+  }
