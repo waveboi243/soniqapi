@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # imports 
 from basic_pitch.inference import predict
 from basic_pitch import ICASSP_2022_MODEL_PATH
@@ -17,6 +19,9 @@ import json
 from fastapi import FastAPI
 import urllib.request
 import uvicorn
+import base64
+from io import BytesIO
+from pydub import AudioSegment
 
 
 app = FastAPI()
@@ -125,7 +130,10 @@ def read_root():
 
 
 @app.get("/mp3post/")
-async def generateSeq(mp3url : str = ""):
-    urllib.request.urlretrieve(mp3url, "app/audio/ad.mp3")
+async def generateSeq(base64str : str = ""):
+    decode_string = base64.b64decode(base64str)
+    audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
+    audio_segment = AudioSegment.from_file(BytesIO(audio_bytes), format='mp3')
+    audio_segment.export("app/audio/ad.mp3", format='mp3')
     seq = await pred_seq("app/audio/ad.mp3", 136, 5)
     return {"sequences":seq}
