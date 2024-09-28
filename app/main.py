@@ -22,6 +22,7 @@ import uvicorn
 import base64
 from io import BytesIO
 from pydub import AudioSegment
+import re
 
 
 app = FastAPI()
@@ -137,3 +138,6 @@ async def generateSeq(base64str : str = ""):
     audio_segment.export("app/audio/ad.mp3", format='mp3')
     seq = await pred_seq("app/audio/ad.mp3", 136, 5)
     return {"sequences":seq}
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", port=8000, log_level="info")
