@@ -4,8 +4,6 @@
 from basic_pitch.inference import predict
 from basic_pitch import ICASSP_2022_MODEL_PATH
 import os
-from keras import *
-from keras.layers import *
 import tensorflow as tf
 import ast
 from numpy import *
@@ -80,17 +78,17 @@ def process(input, max_length, fd):
     elif length > units: 
         d = d[:units]
     d = [normal_input(x, min=min(d), max=max(d)) for x in d]
-    return keras.layers.Reshape([1, int(max_length), int(fd)])(keras.ops.convert_to_tensor(d, dtype="float32"))
+    return tf.Reshape([1, int(max_length), int(fd)])(tf.convert_to_tensor(d, dtype="float32"))
 
 # loss function comparing actual and predicted sequences 
 def custom_loss(y_true, y_pred):
-    y_true = keras.layers.Reshape([-1])(y_true)
-    y_pred = keras.layers.Reshape([-1])(y_pred)
-    y_pred = keras.ops.slice(y_pred, [0], [len(y_true)])
+    y_true = tf.Reshape([-1])(y_true)
+    y_pred = tf.Reshape([-1])(y_pred)
+    y_pred = tf.slice(y_pred, [0], [len(y_true)])
     mid = (int((len(y_true))/15))
-    y_true = keras.layers.Reshape([1, mid, 15])(y_true)
-    y_pred = keras.layers.Reshape([1, mid, 15])(y_pred)
-    sq = keras.ops.square(y_true-y_pred)
+    y_true = tf.Reshape([1, mid, 15])(y_true)
+    y_pred = tf.Reshape([1, mid, 15])(y_pred)
+    sq = tf.square(y_true-y_pred)
     return np.mean(sq)
 
 interpreter = tf.lite.Interpreter(model_path="app/soniqmodel_small.tflite")
@@ -117,7 +115,7 @@ async def pred_seq(input_mp3, ml, feD):
     interpreter.invoke()
     splines = interpreter.get_tensor(output_details[0]['index'])[0]
     amount = interpreter.get_tensor(output_details[0]['index'])[1]
-    splines = np.array(keras.ops.squeeze(splines)).tolist()
+    splines = np.array(tf.squeeze(splines)).tolist()
     splines = list(map(denormal_output, splines))
     amount = int(amount[0][0] * 200)
     # truncates sequences to predicted number of valid sequences
