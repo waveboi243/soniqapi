@@ -28,7 +28,9 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*']
+    allow_origins=["http://localhost:8100"],
+    allow_methods = ["*"],
+    allow_headers = ["*"]
 )
 
 # this function removes scalar (non-list) values from a given list
