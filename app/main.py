@@ -15,6 +15,7 @@ import sys
 import subprocess
 import json
 from fastapi import FastAPI, Response
+from fastapi.middleware.cors import CORSMiddleware
 import urllib.request
 import uvicorn
 import base64
@@ -24,6 +25,11 @@ import re
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*']
+)
 
 # this function removes scalar (non-list) values from a given list
 def descalar(_list):
@@ -129,8 +135,7 @@ def read_root():
 
 
 @app.get("/mp3post/")
-async def generateSeq(response: Response, base64str : str = ""):
-    response.headers['Access-Control-Allow-Origin'] = '*'
+async def generateSeq(base64str : str = ""):
     decode_string = base64.b64decode(base64str)
     audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
     audio_segment = AudioSegment.from_file(BytesIO(audio_bytes), format='mp3')
