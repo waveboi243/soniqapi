@@ -14,7 +14,7 @@ import collections.abc
 import sys
 import subprocess
 import json
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 import urllib.request
 import uvicorn
 import base64
@@ -129,7 +129,8 @@ def read_root():
 
 
 @app.get("/mp3post/")
-async def generateSeq(base64str : str = ""):
+async def generateSeq(response: Response, base64str : str = ""):
+    response.headers['Access-Control-Allow-Origin'] = '*'
     decode_string = base64.b64decode(base64str)
     audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
     audio_segment = AudioSegment.from_file(BytesIO(audio_bytes), format='mp3')
