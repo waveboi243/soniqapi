@@ -22,9 +22,9 @@ import uvicorn
 import base64
 from io import BytesIO
 from pydub import AudioSegment
+import wave
 import re
 from pydantic import BaseModel
-
 
 
 middleware = [
@@ -116,6 +116,14 @@ output_details = interpreter.get_output_details()
 SoniqModel = keras.models.load_model("app/streamlinedmodel", custom_objects={"opt":opt, "custom_loss":custom_loss})
 SoniqModel.compile()
 '''
+
+def bytes_to_wav(byte_data, filename):
+    with wave.open(filename, 'wb') as wav_file:
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(44100)
+        wav_file.writeframes(byte_data)
+
 async def pred_seq(input_mp3, ml, feD):
     model_output, midi_data, note_events = predict(input_mp3)
     _list = dechain(note_events)
@@ -148,9 +156,10 @@ class AudioData(BaseModel):
 async def generateSeq(audioData : AudioData):
     decode_string = base64.b64decode(audioData.audioData)
     # audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
-    audio_segment = AudioSegment.from_file(BytesIO(decode_string), format='mp3')
-    audio_segment.export("app/audio/ad.mp3", format='mp3')
-    seq = await pred_seq("app/audio/ad.mp3", 136, 5)
+    #audio_segment = AudioSegment.from_file(BytesIO(decode_string), format='mp3')
+    #audio_segment.export("app/audio/ad.mp3", format='mp3')
+    bytes_to_wav(decode_string, "app/audio/ad.wav")
+    seq = await pred_seq("app/audio/ad.wav", 136, 5)
     return {"sequences":seq}
 
 if __name__ == "__main__":
