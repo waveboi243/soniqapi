@@ -15,7 +15,8 @@ import sys
 import subprocess
 import json
 from fastapi import FastAPI, Response
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 import urllib.request
 import uvicorn
 import base64
@@ -24,14 +25,19 @@ from pydub import AudioSegment
 import re
 
 
-app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods = ["*"],
-    allow_headers = ["*"]
-)
+
+middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=['*'],
+        #allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*']
+    )
+]
+
+app = FastAPI(middleware=middleware)
 
 # this function removes scalar (non-list) values from a given list
 def descalar(_list):
