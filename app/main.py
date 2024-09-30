@@ -142,10 +142,10 @@ def read_root():
     return {"Hello": "World"}
 
 class B64S(BaseModel):
-    user_id: int
+    audioData: str
 
 @app.post("/mp3post/")
-async def generateSeq(audioData : str):
+async def generateSeq(audioData : B64S):
     decode_string = base64.b64decode(audioData)
     audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
     audio_segment = AudioSegment.from_file(BytesIO(audio_bytes), format='mp3')
