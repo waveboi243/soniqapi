@@ -141,11 +141,11 @@ async def pred_seq(input_mp3, ml, feD):
 def read_root():
     return {"Hello": "World"}
 
-class B64S(BaseModel):
+class AudioData(BaseModel):
     audioData: str
 
 @app.post("/mp3post/")
-async def generateSeq(audioData : B64S):
+async def generateSeq(audioData : AudioData):
     decode_string = base64.b64decode(audioData)
     audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
     audio_segment = AudioSegment.from_file(BytesIO(audio_bytes), format='mp3')
