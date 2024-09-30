@@ -145,8 +145,8 @@ class B64S(BaseModel):
     user_id: int
 
 @app.post("/mp3post/")
-async def generateSeq(base64str : B64S):
-    decode_string = base64.b64decode(base64str.audioData)
+async def generateSeq(audioData : str):
+    decode_string = base64.b64decode(audioData)
     audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
     audio_segment = AudioSegment.from_file(BytesIO(audio_bytes), format='mp3')
     audio_segment.export("app/audio/ad.mp3", format='mp3')
