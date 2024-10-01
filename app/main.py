@@ -155,7 +155,7 @@ class AudioData(BaseModel):
 @app.post("/mp3post/")
 async def generateSeq(audioData : AudioData):
     decode_string = base64.b64decode(audioData.audioData)
-    #audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
+    # audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
     #audio_segment = AudioSegment.from_file(BytesIO(decode_string), format='mp3')
     #audio_segment.export("app/audio/ad.mp3", format='mp3')
     bytes_to_wav(decode_string, "app/audio/ad.wav")
