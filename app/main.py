@@ -125,7 +125,7 @@ def bytes_to_wav(byte_data, filename):
     print(wav_file.getnframes())
 async def pred_seq(input_mp3, ml, feD):
     #model_output, midi_data, note_events = predict(input_mp3)
-    model_output, midi_data, note_events = predict("app/audio/soniqtestauido.mp3")
+    model_output, midi_data, note_events = predict("app/audio/soniqtestauido.mp3", ICASSP_2022_MODEL_PATH)
     _list = dechain(note_events)
     _list = descalar(_list)
     input_data = _list
