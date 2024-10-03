@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#!export REPLICATE_API_TOKEN=r8_LHP*********************************
 
 # imports 
 from basic_pitch.inference import predict
@@ -27,6 +28,7 @@ import re
 from pydantic import BaseModel
 import replicate
 import requests
+
 
 middleware = [
     Middleware(
