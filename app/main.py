@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#!export REPLICATE_API_TOKEN=r8_LHP*********************************
 
 # imports 
 from basic_pitch.inference import predict
@@ -28,9 +27,6 @@ import re
 from pydantic import BaseModel
 import replicate
 import requests
-
-os.environ['REPLICATE_API_TOKEN'] ="r8_Xdx**********************************"
-api = replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
 
 middleware = [
     Middleware(
@@ -133,7 +129,7 @@ async def pred_seq(input_mp3, ml, feD):
     input = {
     "audio_file": "https://p.scdn.co/mp3-preview/8b2c7d5ed9b4207314421fe36af1cfc52cd7d8ab?cid=cfe923b2d660439caf2b557b21f31221"
     }
-    output = api.run(
+    output = replicate.run(
     "rhelsing/basic-pitch:a7cf33cf63fca9c71f2235332af5a9fdfb7d23c459a0dc429daa203ff8e80c78",
     input=input
     )
