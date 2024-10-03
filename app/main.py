@@ -25,7 +25,8 @@ from pydub import AudioSegment
 import wave
 import re
 from pydantic import BaseModel
-
+import replicate
+import requests
 
 middleware = [
     Middleware(
@@ -125,7 +126,17 @@ def bytes_to_wav(byte_data, filename):
         wav_file.writeframes(byte_data)
     print(wav_file.getnframes())
 async def pred_seq(input_mp3, ml, feD):
-    model_output, midi_data, note_events = predict(input_mp3)
+    input = {
+    "audio_file": "https://p.scdn.co/mp3-preview/8b2c7d5ed9b4207314421fe36af1cfc52cd7d8ab?cid=cfe923b2d660439caf2b557b21f31221"
+    }
+    output = replicate.run(
+    "rhelsing/basic-pitch:a7cf33cf63fca9c71f2235332af5a9fdfb7d23c459a0dc429daa203ff8e80c78",
+    input=input
+    )
+    #model_output, midi_data, note_events = predict(input_mp3)
+    response = requests.get(output)
+    print(response.json())
+    model_output, midi_data, note_events = response.json()
     _list = dechain(note_events)
     _list = descalar(_list)
     input_data = _list
