@@ -29,7 +29,7 @@ from pydantic import BaseModel
 import replicate
 import requests
 
-os.environ['REPLICATE_API_TOKEN'] ="r8_LHP*********************************"
+os.environ['REPLICATE_API_TOKEN'] ="r8_Xdx**********************************"
 
 middleware = [
     Middleware(
