@@ -25,6 +25,8 @@ from pydub import AudioSegment
 import wave
 import re
 from pydantic import BaseModel
+import requests
+import json
 
 middleware = [
     Middleware(
@@ -125,8 +127,11 @@ def bytes_to_wav(byte_data, filename):
     print(wav_file.getnframes())
 async def pred_seq(input_mp3, ml, feD):
     #model_output, midi_data, note_events = predict(input_mp3)
-    model_output, midi_data, note_events = predict("app/audio/soniqtestauido.mp3", ICASSP_2022_MODEL_PATH)
-    _list = dechain(note_events)
+    url = 'https://basicpitchapi.onrender.com/inference'
+    obj = {'audioData': input_mp3}
+    response = requests.post(url, json = obj)
+    n = json.loads(response.json["note_events"])
+    _list = dechain(n)
     _list = descalar(_list)
     input_data = _list
     x = process(input_data, ml, feD)
