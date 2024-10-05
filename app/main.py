@@ -166,7 +166,7 @@ async def generateSeq(audioData : AudioData):
     #audio_segment = AudioSegment.from_file(BytesIO(decode_string), format='mp3')
     #audio_segment.export("app/audio/ad.mp3", format='mp3')
     bytes_to_wav(decode_string, "app/audio/ad.wav")
-    seq = await pred_seq("app/audio/ad.wav", 136, 5)
+    seq = await pred_seq("app/audio/ad.wav", 68, 5)
     return {"sequences":seq}
 
 if __name__ == "__main__":
