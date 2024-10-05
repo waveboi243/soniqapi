@@ -130,7 +130,8 @@ async def pred_seq(input_mp3, ml, feD):
     url = 'https://basicpitchapi.onrender.com/inference'
     obj = {'audioData': input_mp3}
     response = requests.post(url, json = obj)
-    n = json.loads(json.loads(response.text)["note_events"])
+    r = json.loads(response.text)
+    n = json.loads(r["note_events"])
     _list = dechain(n)
     _list = descalar(_list)
     input_data = _list
