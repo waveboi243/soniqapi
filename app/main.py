@@ -27,6 +27,7 @@ import re
 from pydantic import BaseModel
 import requests
 import json
+import ast
 
 middleware = [
     Middleware(
@@ -132,7 +133,8 @@ async def pred_seq(input_mp3, ml, feD):
     response = requests.post(url, json = obj)
     r = json.loads(response.text)
     print(type(r['note_events']))
-    n = json.loads(r["note_events"])
+    n = ast.literal_eval(r["note_events"])
+    print(type(n))
     _list = dechain(n)
     _list = descalar(_list)
     input_data = _list
