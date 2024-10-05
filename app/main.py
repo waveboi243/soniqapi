@@ -143,7 +143,7 @@ async def pred_seq(input_mp3, ml, feD):
     '''
     interpreter.invoke()
     splines = interpreter.get_tensor(output_details[0]['index'])[0]
-    amount = interpreter.get_tensor(output_details[0]['index'])[1]
+    amount = interpreter.get_tensor(output_details[1]['index'])[0]
     splines = np.array(tf.squeeze(splines)).tolist()
     splines = list(map(denormal_output, splines))
     amount = int(amount[0][0] * 200)
