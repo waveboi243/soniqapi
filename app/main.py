@@ -94,16 +94,16 @@ def process(input, max_length, fd):
     elif length > units: 
         d = d[:units]
     d = [normal_input(x, min=min(d), max=max(d)) for x in d]
-    return tf.Reshape([1, int(max_length), int(fd)])(tf.convert_to_tensor(d, dtype="float32"))
+    return tf.reshape(tf.convert_to_tensor(d, dtype="float32"), [1, int(max_length), int(fd)])
 
 # loss function comparing actual and predicted sequences 
 def custom_loss(y_true, y_pred):
-    y_true = tf.Reshape([-1])(y_true)
-    y_pred = tf.Reshape([-1])(y_pred)
+    y_true = tf.reshape(y_true, [-1])
+    y_pred = tf.reshape(y_pred, [-1])
     y_pred = tf.slice(y_pred, [0], [len(y_true)])
     mid = (int((len(y_true))/15))
-    y_true = tf.Reshape([1, mid, 15])(y_true)
-    y_pred = tf.Reshape([1, mid, 15])(y_pred)
+    y_true = tf.reshape(y_true, [1, mid, 15])
+    y_pred = tf.reshape(y_pred, [1, mid, 15])
     sq = tf.square(y_true-y_pred)
     return np.mean(sq)
 
@@ -132,9 +132,7 @@ async def pred_seq(input_mp3, ml, feD):
     obj = {'audioData': input_mp3}
     response = requests.post(url, json = obj)
     r = json.loads(response.text)
-    print(type(r['note_events']))
     n = ast.literal_eval(r["note_events"])
-    print(type(n))
     _list = dechain(n)
     _list = descalar(_list)
     input_data = _list
