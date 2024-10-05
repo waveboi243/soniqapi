@@ -132,6 +132,7 @@ async def pred_seq(input_mp3, ml, feD):
     response = requests.post(url, json = obj)
     r = json.loads(response.text)
     print(r)
+    print(r['note_events'])
     n = json.loads(r["note_events"])
     _list = dechain(n)
     _list = descalar(_list)
