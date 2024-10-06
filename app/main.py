@@ -143,11 +143,11 @@ async def pred_seq(input_mp3, ml, feD):
     interpreter.invoke()
     splines = interpreter.get_tensor(output_details[0]['index'])
     amount = interpreter.get_tensor(output_details[1]['index'])
-    print("///// Amount: " + str(amount))
     splines = np.array(tf.squeeze(splines)).tolist()
     splines = list(map(denormal_output, splines))
-    print("///// Splines: " + str(splines))
-    amount = int(amount * 200)
+    amount = int(amount * 40)
+    print("///// Amount: " + str(amount))
+    print("///// Splines: " + str(splines[:(amount+1)]))
     # truncates sequences to predicted number of valid sequences
     return splines[:(amount+1)]
 
