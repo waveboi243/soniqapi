@@ -127,7 +127,6 @@ def bytes_to_wav(byte_data, filename):
         wav_file.writeframes(byte_data)
     print(wav_file.getnframes())
 async def pred_seq(input_mp3, ml, feD):
-    #model_output, midi_data, note_events = predict(input_mp3)
     url = 'https://basicpitchapi.onrender.com/inference'
     obj = {'audioData': input_mp3}
     response = requests.post(url, json = obj)
@@ -142,8 +141,10 @@ async def pred_seq(input_mp3, ml, feD):
     splines, amount = SoniqModel.predict(x)
     '''
     interpreter.invoke()
-    splines = interpreter.get_tensor(output_details[0]['index'])[0]
-    amount = interpreter.get_tensor(output_details[1]['index'])[0]
+    splines = interpreter.get_tensor(output_details[0]['index'])
+    print("///// Splines: " + str(splines))
+    amount = interpreter.get_tensor(output_details[1]['index'])
+    print("///// Amount: " + str(amount))
     splines = np.array(tf.squeeze(splines)).tolist()
     splines = list(map(denormal_output, splines))
     amount = int(amount[0] * 200)
@@ -161,12 +162,7 @@ class AudioData(BaseModel):
 
 @app.post("/mp3post/")
 async def generateSeq(audioData : AudioData):
-    decode_string = base64.b64decode(audioData.audioData)
-    # audio_bytes = decode_string.tobytes()  # Convert uint8 array to bytes
-    #audio_segment = AudioSegment.from_file(BytesIO(decode_string), format='mp3')
-    #audio_segment.export("app/audio/ad.mp3", format='mp3')
-    bytes_to_wav(decode_string, "app/audio/ad.wav")
-    seq = await pred_seq("app/audio/ad.wav", 68, 5)
+    seq = await pred_seq(audioData.audioData, 68, 5)
     return {"sequences":seq}
 
 if __name__ == "__main__":
